@@ -2,6 +2,7 @@ local spotify_widget = require("awesome-wm-widgets.spotify-widget.spotify")
 -- {{{  libraries
 local awesome, client, mouse, screen, tag = awesome, client, mouse, screen, tag
 local ipairs, string, os, table, tostring, tonumber, type = ipairs, string, os, table, tostring, tonumber, type
+local xrandr = require("xrandr")
 
 --https://awesomewm.org/doc/api/documentation/05-awesomerc.md.html
 -- Standard awesome library
@@ -80,7 +81,7 @@ local themes = {
 }
 
 -- choose your theme here
-local chosen_theme = themes[1]
+local chosen_theme = themes[3]
 
 local theme_path = string.format("%s/.config/awesome/themes/%s/theme.lua", os.getenv("HOME"), chosen_theme)
 beautiful.init(theme_path)
@@ -100,16 +101,16 @@ local filemanager       = "polo-gtk"
 local mailclient        = "thunderbird"
 local mediaplayer       = "vlc"
 local scrlocker         = "i3lock"
-local terminal          = "terminator"
+local terminal          = "alacritty"
 local virtualmachine    = "virtualbox"
 
 -- awesome variables
 awful.util.terminal = terminal
---awful.util.tagnames = {  " ", " ", " ", " ", " ", " ", " ", " ", " ", " "  }
---awful.util.tagnames = { "⠐", "⠡", "⠲", "⠵", "⠻", "⠿" }
+-- awful.util.tagnames = {  "  ", "  ", "  ", "  ", "  ", "  ", "  "  }
+awful.util.tagnames = { "1 ", "2 ", "3 ", "4 ", "5 ", "6 ", "7 " }
 --awful.util.tagnames = { "⌘", "♐", "⌥", "ℵ" }
--- awful.util.tagnames = {" WEB |", " CODE |", " NOTES | ", " MUSIC | ", " FILES | ", " BG |", " DISCORD |" }
-awful.util.tagnames = {" 𝗪𝗘𝗕 |", " 𝗖𝗢𝗗𝗘 |", " 𝗡𝗢𝗧𝗘𝗦 | ", " 𝗠𝗨𝗦𝗜𝗖 | ", " 𝗙𝗜𝗟𝗘𝗦 | ", " 𝗕𝗚 |", " 𝗗𝗜𝗦𝗖𝗢𝗥𝗗 | ", " 𝗦𝗬𝗦 |"}
+--awful.util.tagnames = {" WEB |", " CODE |", " NOTES | ", " MUSIC | ", " FILES | ", " BG |", " DISCORD |" }
+--awful.util.tagnames = {" 𝗪𝗘𝗕 |", " 𝗖𝗢𝗗𝗘 |", " 𝗡𝗢𝗧𝗘𝗦 | ", " 𝗠𝗨𝗦𝗜𝗖 | ", " 𝗙𝗜𝗟𝗘𝗦 | ", " 𝗕𝗚 |", " 𝗗𝗜𝗦𝗖𝗢𝗥𝗗 | "}
 -- Use this : https://fontawesome.com/cheatsheet
 --awful.util.tagnames = { "  ", "  ", "  ", "  ", "  " }
 awful.layout.suit.tile.left.mirror = true
@@ -198,7 +199,7 @@ beautiful.init(string.format(gears.filesystem.get_configuration_dir() .. "/theme
 local myawesomemenu = {
     { "Hotkeys", function() return false, hotkeys_popup.show_help end },
     { "Manual", terminal .. " -e 'man awesome'" },
-    { "Edit Config", terminal .. " -e 'sudo nano /home/sherlock/.config/awesome/rc.lua'" },
+    { "Edit Config", terminal .. " -e 'sudo nano /home/holmes/.config/awesome/rc.lua'" },
     { "Restart", awesome.restart },
     { "Hibernate", "systemctl hibernate" },
     { "Shutdown", "shutdown now" },
@@ -217,7 +218,7 @@ awful.util.mymainmenu = freedesktop.menu.build({
         { "Sleep", "systemctl suspend" },
         { "Hibernate", "systemctl hibernate" },
         { "Restart", "systemctl reboot" },
-        { "Exit", "systemctl poweroff" },
+        { "Shutdown", "shutdown now" },
         -- other triads can be put here
     }
 })
@@ -262,24 +263,18 @@ globalkeys = my_table.join(
     -- dmenu
     awful.key({ altkey,  }, "space",
     function ()
-        awful.spawn(string.format("dmenu_run -i  -nb '#292d3e' -nf '#bbc5ff' -sb '#82AAFF' -sf '#292d3e' -fn 'Product Sans Font:bold:pixelsize=14'",
+        -- awful.spawn(string.format("dmenu_run -i  -nb '#292d3e' -nf '#bbc5ff' -sb '#82AAFF' -sf '#292d3e' -fn 'Product Sans Font:bold:pixelsize=14'", beautiful.bg_normal, beautiful.fg_normal, beautiful.bg_focus, beautiful.fg_focus))
+        awful.spawn(string.format("dmenu_run -c -bw 1 -l 20  -p 'Run: ' -fn 'Fantasque Sans Mono' -nf white -sb black -nb grey",
         beautiful.bg_normal, beautiful.fg_normal, beautiful.bg_focus, beautiful.fg_focus))
 	end,
     {description = "show dmenu", group = "hotkeys"}),
 
-    -- My dmenu scripts (Alt+Ctrl+Key)
-    awful.key({ altkey, "Control" }, "e", function () awful.util.spawn( "./.dmenu/dmenu-edit-configs.sh" ) end,
-        {description = "edit config files" , group = "dmenu scripts" }),
-    awful.key({ altkey, "Control" }, "m", function () awful.util.spawn( "./.dmenu/dmenu-sysmon.sh" ) end,
-        {description = "system monitoring apps" , group = "dmenu scripts" }),
-    awful.key({ altkey, "Control" }, "p", function () awful.util.spawn( "passmenu" ) end,
-        {description = "passmenu" , group = "dmenu scripts" }),
-    awful.key({ altkey, "Control"  }, "s", function () awful.util.spawn( "./.dmenu/dmenu-surfraw.sh" ) end,
-        {description = "surfraw web search" , group = "dmenu scripts" }),
-    awful.key({ altkey, "Control"  }, "t", function () awful.util.spawn( "./.dmenu/dmenu-trading.sh" ) end,
-        {description = "trading programs" , group = "dmenu scripts" }),
+    awful.key({ modkey, "Shift" }, "o", function() xrandr.xrandr() end),
+
+
+
     -- screenshots
-    awful.key({ modkey,           }, "Print", function () awful.util.spawn( "./.config/awesome/scripts/screenshot" ) end,
+    awful.key({ modkey,           }, "Print", function () awful.spawn.with_shell( "~/.config/awesome/scripts/screenshot.sh" ) end,
         {description = "Screenshot" , group = "dmenu scripts" }),
     awful.key({ modkey,           }, "F1",      hotkeys_popup.show_help,
         {description = "show help", group="awesome"}),
@@ -300,7 +295,7 @@ globalkeys = my_table.join(
         {description = "view next", group = "tag"}),
     awful.key({ modkey, "Shift"   }, "Tab",  awful.tag.viewprev,
         {description = "view previous", group = "tag"}),
-    awful.key({ altkey,           }, "j",
+    awful.key({ "Shift",           }, "Tab",
         function ()
             awful.client.focus.byidx( 1)
         end,
@@ -442,43 +437,43 @@ globalkeys = my_table.join(
     awful.key({ modkey, }, "z", function () awful.screen.focused().quake:toggle() end,
               {description = "dropdown application", group = "super"}),
     -- Widgets popups
-    awful.key({ altkey, }, "c", function () lain.widget.calendar.show(7) end,
+    awful.key({ altkey, 'Shift' }, "c", function () lain.widget.calendar.show(7) end,
               {description = "show calendar", group = "widgets"}),
     awful.key({ altkey, }, "h", function () if beautiful.fs then beautiful.fs.show(7) end end,
               {description = "show filesystem", group = "widgets"}),
-    awful.key({ altkey, }, "w", function () if beautiful.weather then beautiful.weather.show(7) end end,
-              {description = "show weather", group = "widgets"}),
+    -- awful.key({ altkey, }, "w", function () if beautiful.weather then beautiful.weather.show(7) end end,
+    --           {description = "show weather", group = "widgets"}),
     -- Brightness
-    awful.key({ }, "XF86MonBrightnessUp", function () os.execute("xbacklight -inc 10") end,
+    awful.key({ }, "XF86MonBrightnessUp", function () os.execute("xbacklight -inc 1 ; notify-send -u low -t 1500  'Brightness Increased +1' &") end,
               {description = "+10%", group = "hotkeys"}),
-    awful.key({ }, "XF86MonBrightnessDown", function () os.execute("xbacklight -dec 10") end,
+    awful.key({ }, "XF86MonBrightnessDown", function () os.execute("xbacklight -dec 1 ; notify-send -u low -t 1500  'Brightness Decreased -1' &") end,
               {description = "-10%", group = "hotkeys"}),
     -- ALSA volume control
     --awful.key({ modkey1 }, "Up",
     awful.key({ }, "XF86AudioRaiseVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
+            os.execute(string.format("amixer -q set %s 1%%+ ; notify-send -u low -t 1500  'Volume Increased +1' &", beautiful.volume.channel))
             beautiful.volume.update()
         end),
     --awful.key({ modkey1 }, "Down",
     awful.key({ }, "XF86AudioLowerVolume",
         function ()
-            os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
+            os.execute(string.format("amixer -q set %s 1%%- ;notify-send -u low -t 1500  'Volume Decreased +1' &", beautiful.volume.channel))
             beautiful.volume.update()
         end),
     awful.key({ }, "XF86AudioMute",
         function ()
-            os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
+            os.execute(string.format("amixer -q set %s toggle ; notify-send -u low -t 1500  'Volume Muted' &", beautiful.volume.togglechannel or beautiful.volume.channel))
             beautiful.volume.update()
         end),
     awful.key({ modkey1, "Shift" }, "m",
         function ()
-            os.execute(string.format("amixer -q set %s 100%%", beautiful.volume.channel))
+            os.execute(string.format("amixer -q set %s 100%% ; notify-send -u low -t 1500  'Volume maxed' &", beautiful.volume.channel))
             beautiful.volume.update()
         end),
     awful.key({ modkey1, "Shift" }, "0",
         function ()
-            os.execute(string.format("amixer -q set %s 0%%", beautiful.volume.channel))
+            os.execute(string.format("amixer -q set %s 0%% ; notify-send -u low -t 1500  'Volume muted' &", beautiful.volume.channel))
             beautiful.volume.update()
         end),
     awful.key({ modkey }, "c", function () awful.spawn.with_shell("xsel | xsel -i -b") end,
@@ -486,16 +481,25 @@ globalkeys = my_table.join(
     -- Copy clipboard to primary (gtk to terminals)
     awful.key({ modkey }, "v", function () awful.spawn.with_shell("xsel -b | xsel") end,
               {description = "copy gtk to terminal", group = "hotkeys"}),
-    awful.key({ modkey }, "x", function () awful.spawn.with_shell("terminator") end,
+    awful.key({ modkey }, "x", function () awful.spawn.with_shell("alacritty") end,
               {description = "Terminal", group = "My Programs"}),
     awful.key({ modkey }, "t", function () awful.spawn.with_shell("subl") end,
               {description = "Sublime Text", group = "My Programs"}),
+    awful.key({ modkey }, "d", function () awful.spawn.with_shell("discord") end,
+              {description = "Discord", group = "My Programs"}),
     awful.key({ modkey }, "e", function () awful.spawn.with_shell("polo-gtk") end,
               {description = "File Explorer(polo-gtk)", group = "My Programs"}),
-    awful.key({ modkey }, "b", function () awful.spawn.with_shell("vivaldi-stable") end,
+    awful.key({ modkey }, "b", function () awful.spawn.with_shell("firefox") end,
               {description = "Vivaldi", group = "My Programs"}),
-    awful.key({ modkey }, "l", function () awful.spawn.with_shell("i3lock --image=/home/sherlock/temp/itl.cat_dual-monitor-wallpaper_55779.png --indicator") end,
-              {description = "i3Lock", group = "My Programs"})
+    awful.key({ modkey }, "l", function () awful.spawn.with_shell("i3lock --image=/home/holmes/temp/itl.cat_dual-monitor-wallpaper_55779.png ") end,
+              {description = "i3Lock", group = "My Programs"}),
+    -- scripts
+    awful.key({ modkey, altkey }, "b", function () awful.spawn.with_shell("/home/holmes/.config/rofi/rofi-bluetooth") end,
+              {description = "Open Bluetooth manager", group = "Scripts"}),
+    awful.key({ modkey, altkey}, "c", function () awful.spawn.with_shell("xfce4-popup-clipman-actions") end,
+              {description = "Open clipboard manager", group = "Scripts"}),
+    awful.key({ modkey, altkey}, "n", function () awful.spawn.with_shell("/home/holmes/.config/rofi/applets/applets/network.sh") end,
+              {description = "Open Network manager", group = "Scripts"})
 )
 
 clientkeys = my_table.join(
@@ -633,10 +637,10 @@ awful.rules.rules = {
 
     -- Set applications to always map on the tag 1 on screen 1.
     -- find class or role via xprop command
-    { rule = { class = "vivaldi*" },
+    { rule = { class = "firefox" },
       properties = { screen = 1, tag = awful.util.tagnames[1] } },
 
-    { rule = { class = "vivaldi-stable" },
+    { rule = { class = "Navigator" },
       properties = { screen = 1, tag = awful.util.tagnames[1] } },
 
     { rule = { class = "polo-gtk" },
@@ -648,7 +652,10 @@ awful.rules.rules = {
     { rule = { class = "discord" },
         properties = { screen = 1, tag = awful.util.tagnames[7] } },
 
-    { rule = { class = "sublime_text" },
+    { rule = { class = "VirtualBox Machine" },
+        properties = { screen = 1, tag = awful.util.tagnames[6] } },        
+
+    { rule = { class = "sublime-text" },
         properties = { screen = 1, tag = awful.util.tagnames[3] } },
 
     -- Set applications to always map on the tag 3 on screen 1.
@@ -662,8 +669,8 @@ awful.rules.rules = {
     -- Set applications to be maximized at startup.
     -- find class or role via xprop command
 
-    { rule = { class = "conky" },
-          properties = { screen = 1, tag = awful.util.tagnames[8] } },
+    -- { rule = { class = "conky" },
+    --       properties = { screen = 1, tag = awful.util.tagnames[8] } },
 
     --{ rule = { class = "Gimp*", role = "gimp-image-window" },
       --    properties = { maximized = true } },
@@ -822,12 +829,14 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 
 -- Autostart applications
 awful.spawn.with_shell("~/.config/awesome/autostart.sh")
-awful.spawn.with_shell("conky -c ~/.conky/myconf")
-awful.spawn.with_shell("picom --config ~/.config/picom/compton.conf")
+
+-- awful.spawn.with_shell("conky -c ~/.conky/myconf")
+-- awful.spawn.with_shell("picom -b --experimental-backends --dbus --config /home/holmes/.config/picom.conf")
 -- require('awesome-wallpaper-changer').start({
 --	path = '~/Pictures/Wallpapers/',
 --	show_notify = false,
---	timeout = 60*10,
---	change_on_click = true
+--	timeout = 20,
+--	change_on_click = false
 --})
+
 

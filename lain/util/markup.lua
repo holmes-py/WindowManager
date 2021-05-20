@@ -50,7 +50,7 @@ end
 
 -- Set font and background
 function markup.fontbg(font, bg, text)
-    return format("<span font='%s' background='%s'>%s</span>", font, bg, text)
+    return format("<span font='%s'  background='%s'>%s</span>", font, bg, text)
 end
 
 -- Set font, foreground and background

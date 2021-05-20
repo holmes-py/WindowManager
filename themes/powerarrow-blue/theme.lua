@@ -19,17 +19,17 @@ theme.wallpaper                                 = theme.dir .. "/starwars.jpg"
 theme.font                                      = "Product Sans 9"
 theme.taglist_font                              = "Product Sans Bold 7"
 theme.fg_normal                                 = "#ffffff"
-theme.fg_focus                                  = "#008080"
+theme.fg_focus                                  = "#000000"
 theme.fg_urgent                                 = "#b74822"
-theme.bg_normal                                 = "#282a36"
-theme.bg_focus                                  = "#008080"
+theme.bg_normal                                 = "#000000"
+theme.bg_focus                                  = "#0000FF"
 theme.bg_urgent                                 = "#3F3F3F"
-theme.taglist_fg_focus                          = "#282a36"
+theme.taglist_fg_focus                          = "#000000" --282a36 this was greyish
 theme.tasklist_bg_focus                         = "#000000"
 theme.tasklist_fg_focus                         = "#008080"
 theme.border_width                              = 2
 theme.border_normal                             = "#282a36"
-theme.border_focus                              = "#F07178"
+theme.border_focus                              = "#00FFFF"
 theme.border_marked                             = "#CC9393"
 theme.titlebar_bg_focus                         = "#3F3F3F"
 theme.titlebar_bg_normal                        = "#3F3F3F"
@@ -37,7 +37,7 @@ theme.titlebar_bg_focus                         = theme.bg_focus
 theme.titlebar_bg_normal                        = theme.bg_normal
 theme.titlebar_fg_focus                         = theme.fg_focus
 theme.menu_height                               = 20
-theme.menu_width                                = 140
+theme.menu_width                                = 180
 theme.menu_submenu_icon                         = theme.dir .. "/icons/submenu.png"
 theme.awesome_icon                              = theme.dir .. "/icons/awesome.png"
 theme.taglist_squares_sel                       = theme.dir .. "/icons/square_sel.png"
@@ -78,7 +78,7 @@ theme.widget_scissors                           = theme.dir .. "/icons/scissors.
 theme.widget_weather                            = theme.dir .. "/icons/dish.png"
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
-theme.useless_gap                               = 2
+theme.useless_gap                               = 1
 theme.titlebar_close_button_focus               = theme.dir .. "/icons/titlebar/close_focus.png"
 theme.titlebar_close_button_normal              = theme.dir .. "/icons/titlebar/close_normal.png"
 theme.titlebar_ontop_button_focus_active        = theme.dir .. "/icons/titlebar/ontop_focus_active.png"
@@ -161,6 +161,7 @@ theme.volume = lain.widget.alsabar({
 })
 
 -- MPD
+--[[
 local musicplr = "urxvt -title Music -g 130x34-320+16 -e ncmpcpp"
 local mpdicon = wibox.widget.imagebox(theme.widget_music)
 mpdicon:buttons(my_table.join(
@@ -170,6 +171,7 @@ mpdicon:buttons(my_table.join(
         theme.mpd.update()
     end),
     --]]
+--[[
     awful.button({ }, 2, function ()
         awful.spawn.with_shell("mpc toggle")
         theme.mpd.update()
@@ -195,6 +197,7 @@ theme.mpd = lain.widget.mpd({
         end
     end
 })
+--]]
 
 -- MEM
 local memicon = wibox.widget.imagebox(theme.widget_mem)
@@ -398,28 +401,24 @@ function theme.at_screen_connect(s)
             pl(binclock.widget, "#777E76"),
             --]]
             -- using separators
-            --arrow(theme.bg_normal, "#343434"),
-           -- wibox.container.background(wibox.container.margin(wibox.widget { mailicon, mail and mail.widget, layout = wibox.layout.align.horizontal }, 4, 7), "#343434"),
-            arrow("alpha", "#7197E7"),
-            wibox.container.background(wibox.container.margin(wibox.widget { mpdicon, theme.mpd.widget, layout = wibox.layout.align.horizontal }, 3, 6), "#7197E7"),
-            --008080 A77AC(3+1)
-            arrow("#7197E7", "#008080"),
-            wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 2, 3), "#008080"),
-            arrow("#008080", "#7197E7"),
-            wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 2, 3), "#7197E7"),
-            arrow("#7197E7", "#008080"),
-            wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, 3, 4), "#008080"),
-            arrow("#008080", "#7197E7"),
-            wibox.container.background(wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, 4, 4), "#7197E7"),
-            arrow("#7197E7", "#008080"),
-            wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#008080"),
-            arrow("#008080", "#7197E7"),
-            wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#7197E7"),
-            arrow("#7197E7", "#008080"),
-            wibox.container.background(wibox.container.margin(wibox.widget { nil, neticon, net.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#008080"),
-            arrow("#008080", "#7197E7"),
-            wibox.container.background(wibox.container.margin(clock, 4, 8), "#7197E7"),
-            arrow("#7197E7", "alpha"),
+    
+            arrow("alpha", "#0000FF"),
+            wibox.container.background(wibox.container.margin(wibox.widget { volicon, theme.volume.widget, layout = wibox.layout.align.horizontal }, 2, 3), "#0000FF"),
+            arrow("#0000FF", "#FF7F00"),
+            wibox.container.background(wibox.container.margin(wibox.widget { memicon, mem.widget, layout = wibox.layout.align.horizontal }, 2, 3), "#FF7F00"),
+            arrow("#FF7F00", "#0000FF"),
+            wibox.container.background(wibox.container.margin(wibox.widget { cpuicon, cpu.widget, layout = wibox.layout.align.horizontal }, 3, 4), "#0000FF"),
+            arrow("#0000FF", "#FF7F00"),
+            wibox.container.background(wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, 4, 4), "#FF7F00"),
+            arrow("#FF7F00", "#0000FF"),
+            wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#0000FF"),
+            arrow("#0000FF", "#FF7F00"),
+            wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#FF7F00"),
+            arrow("#FF7F00", "#0000FF"),
+            wibox.container.background(wibox.container.margin(wibox.widget { nil, neticon, net.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#0000FF"),
+            arrow("#0000FF", "#FF7F00"),
+            wibox.container.background(wibox.container.margin(clock, 4, 8), "#FF7F00"),
+            arrow("#FF7F00", "alpha"),
             --]]
             s.mylayoutbox,
         },
